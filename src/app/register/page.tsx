@@ -9,16 +9,20 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
+  name: z.string().nonempty("O campo nome é obrigatório"),
   email: z
     .string()
     .email("Insira um email válido")
     .nonempty("O campo email é obrigatório"),
-  password: z.string().nonempty("O campo de senha é obrigatório"),
+  password: z
+    .string()
+    .min(6, "A senha deve ter pelo menos 6 caracteres")
+    .nonempty("O campo de senha é obrigatório"),
 });
 
 type FormData = z.infer<typeof schema>;
 
-const Login = () => {
+const Register = () => {
   const {
     register,
     handleSubmit,
@@ -51,6 +55,16 @@ const Login = () => {
         >
           <div className="mb-3">
             <Input
+              type="text"
+              placeholder="Digite seu nome completo..."
+              name="name"
+              error={errors.name?.message}
+              register={register}
+            />
+          </div>
+
+          <div className="mb-3">
+            <Input
               type="email"
               placeholder="Digite seu email..."
               name="email"
@@ -76,10 +90,11 @@ const Login = () => {
             Acessar
           </button>
         </form>
-        <Link href="/register">Ainda não possui uma conta? Cadastre-se</Link>
+
+        <Link href="/login">Já possui uma conta? Faça o login!</Link>
       </div>
     </Container>
   );
 };
 
-export default Login;
+export default Register;
