@@ -43,14 +43,15 @@ const Register = () => {
           <Image
             src={logoImage}
             alt="Logo do site"
-            height={50}
+            height={100}
             width={100}
+            priority
             className="w-full"
           />
         </Link>
 
         <form
-          className="bg-white max-w-xl w-full rounded-lg p-4"
+          className="bg-white max-w-xl w-full rounded-lg p-4 mt-[-50px]"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="mb-3">
