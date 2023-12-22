@@ -13,6 +13,7 @@ export function Input({ name, register, rules, error, ...props }: InputProps) {
     <div>
       <input
         className="w-full border-2 rounded-md h-11 px-2"
+        autoComplete="on"
         {...register(`${name}`, rules)}
         {...props}
       />

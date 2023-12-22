@@ -10,6 +10,7 @@ interface AuthContextData {
   user: UserProps;
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<boolean>;
+  signUp: (credentials: SignUpProps) => Promise<boolean>;
 }
 
 interface UserProps {
@@ -23,6 +24,12 @@ interface AuthProviderProps {
 }
 
 interface SignInProps {
+  email?: string;
+  password?: string;
+}
+
+interface SignUpProps {
+  name?: string;
   email?: string;
   password?: string;
 }
@@ -65,17 +72,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
 
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        toast.success("Logado com sucesso!");
+        toast.success("Usuário logado!");
         window.location.href = "/";
       } catch (error) {
         toast.error("Erro ao fazer login!");
-        console.log("Erro ao fazer login: ", error);
+      }
+    });
+  }
+
+  async function signUp({ name, email, password }: SignUpProps) {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const response = await api.post("/register", {
+          name,
+          email,
+          password,
+        });
+
+        toast.success("Usuário cadastrado!");
+        await signIn({ email, password });
+        window.location.href = "/";
+        resolve(true);
+      } catch (error) {
+        toast.error("Erro ao cadastrar");
+        console.error(error);
+        reject(false);
       }
     });
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp }}>
       <Toaster position="top-right" reverseOrder={false} />
       {children}
     </AuthContext.Provider>

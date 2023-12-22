@@ -2,9 +2,12 @@
 import logoImage from "@/../public/images/logo.svg";
 import Container from "@/components/container";
 import { Input } from "@/components/input";
+import { Loader } from "@/components/loader";
+import { AuthContext } from "@/context/AuthContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -23,6 +26,10 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const Register = () => {
+  const [loading, setLoading] = useState(false);
+
+  const { signUp } = useContext(AuthContext);
+
   const {
     register,
     handleSubmit,
@@ -32,8 +39,18 @@ const Register = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const onSubmit = async (data: FormData) => {
+    if (!data.name || !data.email || !data.password) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await signUp(data);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
   };
 
   return (
@@ -86,9 +103,10 @@ const Register = () => {
 
           <button
             type="submit"
-            className="bg-zinc-900 w-full rounded-md text-white h-10 font-medium"
+            className="bg-zinc-900 w-full rounded-md text-white h-10 font-medium flex items-center justify-center"
+            disabled={loading && true}
           >
-            Acessar
+            {loading ? <Loader /> : "Cadastrar"}
           </button>
         </form>
 

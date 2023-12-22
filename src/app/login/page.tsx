@@ -90,6 +90,7 @@ const Login = () => {
           <button
             type="submit"
             className="flex items-center justify-center bg-zinc-900 w-full rounded-md text-white h-10 font-medium"
+            disabled={loading && true}
           >
             {loading ? <Loader /> : "Acessar"}
           </button>
