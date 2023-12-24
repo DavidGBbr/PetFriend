@@ -1,6 +1,6 @@
 "use client";
-import { createContext, ReactNode, useState } from "react";
-import { destroyCookie, setCookie } from "nookies";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import Router from "next/router";
 import { api } from "@/services/apiClient";
 import { Toaster } from "react-hot-toast";
@@ -17,6 +17,7 @@ interface UserProps {
   id: string;
   name: string;
   email: string;
+  pets?: [];
 }
 
 interface AuthProviderProps {
@@ -37,7 +38,6 @@ interface SignUpProps {
 export const AuthContext = createContext({} as AuthContextData);
 
 export const signOut = () => {
-  console.log("Error logout");
   try {
     destroyCookie(null, "@pet.token", { path: "/" });
     Router.push("/login");
@@ -65,11 +65,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           path: "/",
         });
 
-        setUser({
-          id,
-          name,
-          email,
-        });
+        setUser({ id, name, email });
 
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         toast.success("Usuário logado!");

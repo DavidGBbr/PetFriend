@@ -10,7 +10,7 @@ const Header = () => {
   const { isAuthenticated } = useContext(AuthContext);
 
   const signed = isAuthenticated;
-  const loadingAuth = false;
+  //console.log("Teste: ", isAuthenticated);
 
   const handleLogout = () => {
     signOut();
@@ -23,7 +23,7 @@ const Header = () => {
           <Image alt="Logo do site" src={logoImg} height={110} />
         </Link>
 
-        {!loadingAuth && signed && (
+        {signed && (
           <Link href="/dashboard">
             <button className="border-2 rounded-full p-1 border-gray-900">
               <FiUser size={22} color="#000" />
@@ -31,7 +31,7 @@ const Header = () => {
           </Link>
         )}
 
-        {!loadingAuth && !signed && (
+        {!signed && (
           <Link href="/login">
             <button
               className="border-2 rounded-full p-1 border-gray-900"
