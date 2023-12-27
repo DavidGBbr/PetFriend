@@ -2,12 +2,15 @@
 import Container from "@/components/container";
 import Header from "@/components/header";
 import DashboardHeader from "@/components/panelheader";
-import React from "react";
+import React, { ChangeEvent, useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+import Image from "next/image";
+import { setupAPIClient } from "@/services/api";
 
 const schema = z.object({
   name: z.string().nonempty("O campo nome é obrigatório"),
@@ -21,6 +24,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const New = () => {
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -31,8 +36,41 @@ const New = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const image = e.target.files[0];
+
+      if (image.type === "image/jpeg" || image.type === "image/png") {
+        setSelectedImage(image);
+      } else {
+        toast.error("Envie uma imagem jpeg ou png!");
+      }
+    }
+  };
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const dataForm = new FormData();
+
+      dataForm.append("file", selectedImage);
+      dataForm.append("name", data.name);
+      dataForm.append("specie", data.specie);
+      dataForm.append("weight", data.weight);
+      dataForm.append("age", data.age);
+      dataForm.append("description", data.description);
+      dataForm.append("whatsapp", data.whatsapp);
+
+      const apiClient = setupAPIClient();
+
+      await apiClient.post("/pet/new", dataForm);
+
+      toast.success("Pet registrado com sucesso!");
+      reset();
+      setSelectedImage(null);
+    } catch (error) {
+      console.log(error);
+      toast.error("Ops erro ao registrar!");
+    }
   };
 
   return (
@@ -50,9 +88,22 @@ const New = () => {
                 type="file"
                 accept="image/*"
                 className="opacity-0 cursor-pointer"
+                onChange={handleFile}
               />
             </div>
           </button>
+
+          {selectedImage && (
+            <div key={selectedImage.name}>
+              <Image
+                src={URL.createObjectURL(selectedImage)}
+                alt="Foto do pet"
+                width={100}
+                height={100}
+                className="rounded-lg w-full h-32 object-cover"
+              />
+            </div>
+          )}
         </div>
 
         <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
@@ -67,7 +118,6 @@ const New = () => {
                 placeholder="Ex: Rex..."
               />
             </div>
-
             <div className="mb-3">
               <p className="mb-2 font-medium">Espécie</p>
               <Input
