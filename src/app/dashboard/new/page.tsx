@@ -19,6 +19,7 @@ const schema = z.object({
   age: z.string().nonempty("A idade do pet é obrigatória"),
   description: z.string().nonempty("A descrição do pet é obrigatória"),
   whatsapp: z.string().min(1, "O telefone é obrigatório"),
+  city: z.string().nonempty("O nome da cidade/estado é obrigatório"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -59,6 +60,7 @@ const New = () => {
       dataForm.append("age", data.age);
       dataForm.append("description", data.description);
       dataForm.append("whatsapp", data.whatsapp);
+      dataForm.append("city", data.city);
 
       const apiClient = setupAPIClient();
 
@@ -153,17 +155,28 @@ const New = () => {
               </div>
             </div>
 
-            <div className="w-full">
-              <p className="mb-2 font-medium">Telefone / Whatsapp</p>
-              <Input
-                type="text"
-                register={register}
-                name="whatsapp"
-                error={errors.whatsapp?.message}
-                placeholder="Ex: 011999101923..."
-              />
+            <div className="flex w-full mb-3 flex-row items-center gap-4">
+              <div className="w-full">
+                <p className="mb-2 font-medium">Telefone / Whatsapp</p>
+                <Input
+                  type="text"
+                  register={register}
+                  name="whatsapp"
+                  error={errors.whatsapp?.message}
+                  placeholder="Ex: 011999101923..."
+                />
+              </div>
+              <div className="w-full">
+                <p className="mb-2 font-medium">Cidade/Estado</p>
+                <Input
+                  type="text"
+                  register={register}
+                  name="city"
+                  error={errors.city?.message}
+                  placeholder="Ex: Campo Grande - MS..."
+                />
+              </div>
             </div>
-
             <div className="mb-3">
               <p className="mb-2 font-medium">Descrição</p>
               <textarea
