@@ -1,15 +1,60 @@
+"use client";
 import Container from "@/components/container";
 import Header from "@/components/header";
 import DashboardHeader from "@/components/panelheader";
-import React from "react";
+import { setupAPIClient } from "@/services/api";
+import { PetType } from "@/types/PetType";
+import React, { useEffect, useState } from "react";
+import { FiTrash2 } from "react-icons/fi";
 
 const Dashboard = () => {
+  const [myPets, setMyPets] = useState<PetType[]>([]);
+
+  useEffect(() => {
+    const getPets = async () => {
+      const apiClient = setupAPIClient();
+      const response = await apiClient.get("/mypets");
+      setMyPets(response.data as PetType[]);
+    };
+
+    getPets();
+  }, []);
+
   return (
     <>
       <Header />
       <Container>
         <DashboardHeader />
-        Página dashboard
+        <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {myPets.map((pet) => (
+            <section className="w-full bg-white rounded-lg relative overflow-hidden">
+              <button
+                onClick={() => {
+                  alert("Teste");
+                }}
+                className="absolute z-10 bg-white w-14 h-14 rounded-full flex items-center justify-center right-2 top-2 drop-shadow"
+              >
+                <FiTrash2 size={26} color="#000" />
+              </button>
+              <img
+                className="w-full bg-white relative hover:scale-105 duration-200 transition-all mb-2"
+                src={pet.picture}
+              />
+
+              <div>
+                <div className="flex justify-center px-2">
+                  <strong className="text-black font-medium text-xl">
+                    {pet.specie} - {pet.age} {pet.age === 1 ? "ano" : "anos"}
+                  </strong>
+                </div>
+                <div className="w-full h-px bg-slate-200 my-2"></div>
+                <div className="px-2 pb-2 text-center">
+                  <span className="text-black">{pet?.city}</span>
+                </div>
+              </div>
+            </section>
+          ))}
+        </main>
       </Container>
     </>
   );

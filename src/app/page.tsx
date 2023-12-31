@@ -2,24 +2,13 @@
 import { useState, useEffect } from "react";
 import Container from "@/components/container";
 import Header from "@/components/header";
-import Image from "next/image";
-import logoImage from "@/../public/images/logo.svg";
 import { setupAPIClient } from "@/services/api";
-
-interface PetType {
-  id: string;
-  ownerId: string;
-  name: string;
-  picture: string;
-  specie: string;
-  weight: number;
-  age: number;
-  whatsapp: string;
-  city: string;
-}
+import Link from "next/link";
+import { PetType } from "@/types/PetType";
 
 const Home = () => {
   const [pets, setPets] = useState<PetType[]>([]);
+  const [loadImage, setLoadImage] = useState<string>();
 
   useEffect(() => {
     const getPets = async () => {
@@ -30,6 +19,10 @@ const Home = () => {
 
     getPets();
   }, []);
+
+  const handleImageLoad = (id: string) => {
+    setLoadImage(id);
+  };
   return (
     <>
       <Header />
@@ -50,17 +43,23 @@ const Home = () => {
 
         <main className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {pets?.map((pet) => (
-            <>
+            <Link href={`pet/${pet.id}`}>
               <section
                 className="w-full bg-white rounded-lg flex flex-col justify-between overflow-hidden"
                 key={pet.id}
               >
+                <div
+                  className="w-full h-56 bg-slate-200"
+                  style={{ display: loadImage?.length ? "none" : "block" }}
+                ></div>
                 <img
                   src={`${process.env.NEXT_PUBLIC_API_URL}/files/${pet.picture}`}
                   alt={pet.name}
                   width={100}
                   height={100}
                   className="w-full mb-2 h-56 hover:scale-105 duration-200 transition-all object-cover"
+                  onLoad={() => handleImageLoad(pet.id)}
+                  style={{ display: loadImage?.length ? "block" : "none" }}
                 />
 
                 <div>
@@ -75,7 +74,7 @@ const Home = () => {
                   </div>
                 </div>
               </section>
-            </>
+            </Link>
           ))}
         </main>
       </Container>
