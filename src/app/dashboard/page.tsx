@@ -20,6 +20,17 @@ const Dashboard = () => {
     getPets();
   }, []);
 
+  const handleDelete = async (id: string) => {
+    try {
+      const apiClient = setupAPIClient();
+      await apiClient.delete(`/delete/${id}`);
+
+      setMyPets(myPets.filter((pet) => pet.id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -30,7 +41,7 @@ const Dashboard = () => {
             <section className="w-full bg-white rounded-lg relative overflow-hidden">
               <button
                 onClick={() => {
-                  alert("Teste");
+                  handleDelete(pet.id);
                 }}
                 className="absolute z-10 bg-white w-14 h-14 rounded-full flex items-center justify-center right-2 top-2 drop-shadow"
               >
@@ -38,7 +49,7 @@ const Dashboard = () => {
               </button>
               <img
                 className="w-full bg-white relative hover:scale-105 duration-200 transition-all mb-2"
-                src={pet.picture}
+                src={`${process.env.NEXT_PUBLIC_API_URL}/files/${pet.picture}`}
               />
 
               <div>
