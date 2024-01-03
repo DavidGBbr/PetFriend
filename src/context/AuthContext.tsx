@@ -1,6 +1,6 @@
 "use client";
-import { createContext, ReactNode, useEffect, useState } from "react";
-import { destroyCookie, parseCookies, setCookie } from "nookies";
+import { createContext, ReactNode, useState } from "react";
+import { destroyCookie, setCookie } from "nookies";
 import Router from "next/router";
 import { api } from "@/services/apiClient";
 import { Toaster } from "react-hot-toast";
@@ -8,7 +8,6 @@ import toast from "react-hot-toast";
 
 interface AuthContextData {
   user: UserProps;
-  isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<boolean>;
   signUp: (credentials: SignUpProps) => Promise<boolean>;
 }
@@ -40,15 +39,14 @@ export const AuthContext = createContext({} as AuthContextData);
 export const signOut = () => {
   try {
     destroyCookie(null, "@pet.token", { path: "/" });
-    Router.push("/login");
+    window.location.href = "/login";
   } catch (error) {
-    console.log("Error ao sair");
+    console.log("Error ao sair: ");
   }
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserProps>();
-  const isAuthenticated = !!user;
 
   async function signIn({ email, password }: SignInProps) {
     return new Promise<boolean>(async (resolve, reject) => {
@@ -69,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         toast.success("Usuário logado!");
-        window.location.href = "/";
+        window.location.href = "/dashboard";
       } catch (error) {
         toast.error("Erro ao fazer login!");
       }
@@ -98,7 +96,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp }}>
+    <AuthContext.Provider value={{ user, signIn, signUp }}>
       <Toaster position="top-right" reverseOrder={false} />
       {children}
     </AuthContext.Provider>

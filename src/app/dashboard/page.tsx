@@ -38,7 +38,10 @@ const Dashboard = () => {
         <DashboardHeader />
         <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {myPets.map((pet) => (
-            <section className="w-full bg-white rounded-lg relative overflow-hidden">
+            <section
+              className="w-full bg-white rounded-lg relative overflow-hidden"
+              key={pet.id}
+            >
               <button
                 onClick={() => {
                   handleDelete(pet.id);

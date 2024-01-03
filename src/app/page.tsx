@@ -43,7 +43,7 @@ const Home = () => {
 
         <main className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {pets?.map((pet) => (
-            <Link href={`pet/${pet.id}`}>
+            <Link href={`pet/${pet.id}`} key={pet.id}>
               <section
                 className="w-full bg-white rounded-lg flex flex-col justify-between overflow-hidden"
                 key={pet.id}
