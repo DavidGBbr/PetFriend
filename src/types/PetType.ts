@@ -8,4 +8,5 @@ export interface PetType {
   age: number;
   whatsapp: string;
   city: string;
+  description?: string;
 }
