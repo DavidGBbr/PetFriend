@@ -4,6 +4,7 @@ import Header from "@/components/header";
 import DashboardHeader from "@/components/panelheader";
 import { setupAPIClient } from "@/services/api";
 import { PetType } from "@/types/PetType";
+import { toCapitalize } from "@/utils/ToCapitalize";
 import React, { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 
@@ -58,7 +59,8 @@ const Dashboard = () => {
               <div>
                 <div className="flex justify-center px-2">
                   <strong className="text-black font-medium text-xl">
-                    {pet.specie} - {pet.age} {pet.age === 1 ? "ano" : "anos"}
+                    {toCapitalize(pet.specie)} - {pet.age}{" "}
+                    {pet.age === 1 ? "ano" : "anos"}
                   </strong>
                 </div>
                 <div className="w-full h-px bg-slate-200 my-2"></div>

@@ -13,13 +13,14 @@ import Image from "next/image";
 import { setupAPIClient } from "@/services/api";
 
 const schema = z.object({
-  name: z.string().nonempty("O campo nome é obrigatório"),
-  specie: z.string().nonempty("A espécie do pet é obrigatória"),
-  weight: z.string().nonempty("O peso do pet é obrigatório"),
-  age: z.string().nonempty("A idade do pet é obrigatória"),
-  description: z.string().nonempty("A descrição do pet é obrigatória"),
-  whatsapp: z.string().min(1, "O telefone é obrigatório"),
-  city: z.string().nonempty("O nome da cidade/estado é obrigatório"),
+  name: z.string().min(2, "O campo nome é obrigatório"),
+  specie: z.string().min(2, "A espécie do pet é obrigatória"),
+  weight: z.string().min(1, "O peso do pet é obrigatório"),
+  age: z.string().min(1, "A idade do pet é obrigatória"),
+
+  description: z.string().min(1, "A descrição do pet é obrigatória"),
+  whatsapp: z.string().min(11, "O telefone é obrigatório"),
+  city: z.string().min(1, "O nome da cidade/estado é obrigatório"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -56,8 +57,8 @@ const New = () => {
       dataForm.append("file", selectedImage);
       dataForm.append("name", data.name);
       dataForm.append("specie", data.specie);
-      dataForm.append("weight", data.weight);
-      dataForm.append("age", data.age);
+      dataForm.append("weight", String(data.weight));
+      dataForm.append("age", String(data.age));
       dataForm.append("description", data.description);
       dataForm.append("whatsapp", data.whatsapp);
       dataForm.append("city", data.city);

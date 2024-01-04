@@ -7,6 +7,8 @@ import { useParams } from "next/navigation";
 import { FaWhatsapp } from "react-icons/fa";
 
 import React, { useEffect, useState } from "react";
+import { toCapitalize } from "@/utils/ToCapitalize";
+import { formatNumber } from "@/utils/formatNumber";
 
 const Pet = () => {
   const [pet, setPet] = useState<PetType>();
@@ -30,13 +32,15 @@ const Pet = () => {
           <>
             <img
               src={`${process.env.NEXT_PUBLIC_API_URL}/files/${pet?.picture}`}
-              alt={pet.specie}
+              alt={toCapitalize(pet.specie)}
               className="w-full h-96 object-cover rounded-lg"
             />
             <main className="w-full bg-white rounded-lg p-6 my-4">
               <div className="flex flex-col sm:flex-row mb-4 items-center justify-between">
                 <h1 className="font-bold text-3xl text-black">{pet.name}</h1>
-                <h1 className="font-bold text-3xl text-black">{pet.specie}</h1>
+                <h1 className="font-bold text-3xl text-black">
+                  {toCapitalize(pet.specie)}
+                </h1>
               </div>
               <div className="flex w-full gap-6 my-4">
                 <div className="flex flex-row gap-4">
@@ -61,7 +65,7 @@ const Pet = () => {
               <p className="mb-4">{pet.description}</p>
 
               <strong>Telefone / WhatsApp: </strong>
-              <p className="mb-4">{pet.whatsapp}</p>
+              <p className="mb-4">{formatNumber(pet.whatsapp)}</p>
 
               <a
                 className="cursor-pointer bg-green-500 w-full text-white flex items-center justify-center gap-2 my-6 h-11 text-xl rounded-lg font-medium"

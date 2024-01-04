@@ -5,24 +5,44 @@ import Header from "@/components/header";
 import { setupAPIClient } from "@/services/api";
 import Link from "next/link";
 import { PetType } from "@/types/PetType";
+import { toCapitalize } from "@/utils/ToCapitalize";
 
 const Home = () => {
   const [pets, setPets] = useState<PetType[]>([]);
+  const [specie, setSpecie] = useState("");
   const [loadImage, setLoadImage] = useState<string>();
 
   useEffect(() => {
-    const getPets = async () => {
-      const apiClient = setupAPIClient();
-      const response = await apiClient.get("/pets");
-      setPets(response.data as PetType[]);
-    };
-
     getPets();
   }, []);
+
+  const getPets = async () => {
+    const apiClient = setupAPIClient();
+    const response = await apiClient.get("/pets");
+    setPets(response.data as PetType[]);
+  };
+
+  const getFilteredPets = async (specie: string) => {
+    const apiClient = setupAPIClient();
+    const response = await apiClient.get(`/pets/${specie.toUpperCase()}`);
+    setPets(response.data as PetType[]);
+  };
 
   const handleImageLoad = (id: string) => {
     setLoadImage(id);
   };
+
+  const handleSearchPet = () => {
+    if (specie === "") {
+      getPets();
+      return;
+    }
+
+    setPets([]);
+    setLoadImage("");
+    getFilteredPets(specie);
+  };
+
   return (
     <>
       <Header />
@@ -31,8 +51,13 @@ const Home = () => {
           <input
             className="w-full border-2 rounded-lg h-9 px-3 outline-none"
             placeholder="Digite a raça do pet..."
+            value={specie}
+            onChange={(e) => setSpecie(e.target.value)}
           />
-          <button className="bg-red-500 h-9 px-8 rounded-lg text-white font-medium text-lg">
+          <button
+            className="bg-red-500 h-9 px-8 rounded-lg text-white font-medium text-lg"
+            onClick={handleSearchPet}
+          >
             Buscar
           </button>
         </section>
@@ -65,7 +90,8 @@ const Home = () => {
                 <div>
                   <div className="flex justify-center px-2">
                     <strong className="text-black font-medium text-xl">
-                      {pet.specie} - {pet.age} {pet.age === 1 ? "ano" : "anos"}
+                      {toCapitalize(pet.specie)} - {pet.age}{" "}
+                      {pet.age === 1 ? "ano" : "anos"}
                     </strong>
                   </div>
                   <div className="w-full h-px bg-slate-200 my-2"></div>
