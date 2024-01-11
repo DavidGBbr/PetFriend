@@ -9,6 +9,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { toCapitalize } from "@/utils/ToCapitalize";
 import { formatNumber } from "@/utils/formatNumber";
+import Footer from "@/components/footer";
 
 const Pet = () => {
   const [pet, setPet] = useState<PetType>();
@@ -79,6 +80,7 @@ const Pet = () => {
           </>
         )}
       </Container>
+      <Footer />
     </>
   );
 };

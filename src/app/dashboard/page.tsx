@@ -1,5 +1,6 @@
 "use client";
 import Container from "@/components/container";
+import Footer from "@/components/footer";
 import Header from "@/components/header";
 import DashboardHeader from "@/components/panelheader";
 import { setupAPIClient } from "@/services/api";
@@ -72,6 +73,7 @@ const Dashboard = () => {
           ))}
         </main>
       </Container>
+      <Footer />
     </>
   );
 };

@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { setupAPIClient } from "@/services/api";
+import Footer from "@/components/footer";
 
 const schema = z.object({
   name: z.string().min(2, "O campo nome é obrigatório"),
@@ -203,6 +204,7 @@ const New = () => {
           </form>
         </div>
       </Container>
+      <Footer />
     </>
   );
 };

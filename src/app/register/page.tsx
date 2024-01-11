@@ -110,7 +110,7 @@ const Register = () => {
           </button>
         </form>
 
-        <Link href="/login">Já possui uma conta? Faça o login!</Link>
+        <Link href="/login">Já possui uma conta? Faça o login</Link>
       </div>
     </Container>
   );

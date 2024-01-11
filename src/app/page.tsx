@@ -6,6 +6,7 @@ import { setupAPIClient } from "@/services/api";
 import Link from "next/link";
 import { PetType } from "@/types/PetType";
 import { toCapitalize } from "@/utils/ToCapitalize";
+import Footer from "@/components/footer";
 
 const Home = () => {
   const [pets, setPets] = useState<PetType[]>([]);
@@ -104,6 +105,7 @@ const Home = () => {
           ))}
         </main>
       </Container>
+      <Footer />
     </>
   );
 };
